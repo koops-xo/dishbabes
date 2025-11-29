@@ -1,0 +1,164 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dishwasher • Koops & Sis</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+<body class="bg-body-secondary">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#">
+      <p>🧼🫧 Dishwasher</p> 
+    </a>
+    <div class="d-flex align-items-center">
+      <button id="themeToggle" class="btn btn-light btn-sm me-2" type="button">
+        <i class="bi bi-moon-stars-fill"></i>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-5" style="max-width:720px;">
+  <div class="card shadow-sm">
+    <div class="card-body">
+
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+          <h2 class="h4 mb-0">Dishwasher Schedule</h2>
+          <small class="text-muted">Keeping it peaceful in the kitchen </small>
+        </div>
+        <div>
+          <span class="badge bg-info text-dark">Shared</span>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      {% if messages %}
+        <div class="mb-3">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- Today / Tomorrow -->
+      <div class="mb-4">
+        <p class="mb-1">
+          <strong>Today</strong>
+          <span class="ms-2 badge bg-primary">{{ today }}</span>
+        </p>
+        <p class="mb-0">
+          <strong>Tomorrow</strong>
+          <span class="ms-2 badge bg-success">{{ tomorrow }}</span>
+        </p>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="d-grid gap-2 mb-3">
+        <form method="POST">
+          {% csrf_token %}
+          <button class="btn btn-primary" name="action" value="done" type="submit">
+            <i class="bi bi-check2-circle me-1"></i> Mark Today as Washed
+          </button>
+        </form>
+      </div>
+
+      <hr>
+
+      <!-- Manual override with avatars -->
+      <h5 class="mb-3 text-center">Manual Override</h5>
+      <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="override">
+
+        <div class="d-flex justify-content-center gap-3">
+
+          <!-- YOU avatar -->
+          <button type="submit" name="person" value="You" class="btn p-0 border-0 bg-transparent">
+            <div class="card text-center shadow-sm" style="width:120px;">
+              <div class="card-body">
+                <img src="/static/avatars/koops.png" class="rounded-circle mb-2" width="60" height="60">
+                <p class="mb-0 fw-bold">Koops🫧</p>
+              </div>
+            </div>
+          </button>
+
+          <!-- SISTER avatar -->
+          <button type="submit" name="person" value="Sister" class="btn p-0 border-0 bg-transparent">
+            <div class="card text-center shadow-sm" style="width:120px;">
+              <div class="card-body">
+                <img src="/static/avatars/remo.png" class="rounded-circle mb-2" width="60" height="60">
+                <p class="mb-0 fw-bold">Remo🫧</p>
+              </div>
+            </div>
+          </button>
+
+        </div>
+      </form>
+
+      <!-- History -->
+      <hr class="my-4">
+      <h6 class="mb-3">History <small class="text-muted">(last 10)</small></h6>
+      <ul class="list-group">
+        {% for entry in history %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div><i class="bi bi-person-fill me-2"></i>{{ entry.person }}</div>
+            <small class="text-muted">{{ entry.date }}</small>
+          </li>
+        {% empty %}
+          <li class="list-group-item text-center text-muted">
+            No history yet — start by marking today as washed.
+          </li>
+        {% endfor %}
+      </ul>
+
+    </div>
+  </div>
+
+  <footer class="text-center text-muted mt-4">
+    <small>Built with ❤️ • Koops & Sis Edition</small>
+  </footer>
+</main>
+
+<!-- Tiny JS: theme toggle + persistence -->
+<script>
+  (function(){
+    const html = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+
+    const saved = localStorage.getItem('bs-theme');
+    if (saved) html.setAttribute('data-bs-theme', saved);
+
+    function updateBtn() {
+      const cur = html.getAttribute('data-bs-theme') || 'light';
+      toggle.innerHTML = cur === 'light'
+        ? '<i class="bi bi-moon-stars-fill"></i>'
+        : '<i class="bi bi-sun-fill"></i>';
+    }
+    updateBtn();
+
+    toggle.addEventListener('click', () => {
+      const cur = html.getAttribute('data-bs-theme') || 'light';
+      const nxt = cur === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-bs-theme', nxt);
+      localStorage.setItem('bs-theme', nxt);
+      updateBtn();
+    });
+  })();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
