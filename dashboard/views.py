@@ -40,7 +40,7 @@ def dishwasher(request):
     return render(request, "dishwasher.html", context)
 
 def home(request):
-    people = ["You", "Sister"]
+    people = ["Koops", "Remo"]
 
     return render(request, "dishwasher/home.html", {
         "people": people,

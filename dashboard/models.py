@@ -2,8 +2,8 @@ from django.db import models
 from datetime import date
 
 class DishRotation(models.Model):
-    YOU = "You"
-    SISTER = "Sister"
+    YOU = "Koops"
+    SISTER = "Remo"
     PEOPLE = [YOU, SISTER]
 
     today_index = models.IntegerField(default=0)
