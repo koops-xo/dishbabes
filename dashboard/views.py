@@ -3,7 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import DishRotation, WashHistory
+from .models import DishRotation, WashHistor
 from datetime import date
 
 def dishwasher(request):
@@ -40,7 +40,7 @@ def dishwasher(request):
     return render(request, "dishwasher.html", context)
 
 def home(request):
-    people = ["Koops", "Remo"]
+    people = [YOU, SISTER]
 
     return render(request, "dishwasher/home.html", {
         "people": people,
